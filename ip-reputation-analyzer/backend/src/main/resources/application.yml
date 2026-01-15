@@ -1,0 +1,28 @@
+server:
+  port: 8080
+  tomcat:
+    threads:
+      max: 300
+
+api:
+  virustotal:
+    key: ca006fe14ac8e875a9e8d95efede4bfb45500ffbb8ba397b76323b09abe90906 # Replace with your actual VirusTotal API key
+  abuseipdb:
+    key: 9bae5a5e3e18f5852635c70d57d27b41bdf6cd8f2d7814f5b1d4424450e0d4c4c5d4ccea3a4f78a6
+  greynoise:
+    key: ca006fe14ac8e875a9e8d95efede4bfb45500ffbb8ba397b76323b09abe90906 # Replace with your actual Greynoise API key
+
+spring:
+  data:
+    redis:
+      host: superb-piranha-34578.upstash.io
+      port: 6379
+      username: default
+      password: AYcSAAIncDI1M2E3ZWE3NjYwNzM0NTc1YjNkNDIxNjhiZWZlNTgwMnAyMzQ1Nzg
+      ssl:
+        enabled: true
+      timeout: 5000ms
+
+
+
+
