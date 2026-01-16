@@ -6,7 +6,7 @@
   
   <modelVersion>4.0.0</modelVersion>
   
-  <!-- ✅ SPRING BOOT PARENT (VERY IMPORTANT) -->
+  <!-- SPRING BOOT PARENT (VERY IMPORTANT) -->
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -26,25 +26,25 @@
   
   <dependencies>
     
-    <!-- 🌐 SPRING WEB -->
+    <!-- SPRING WEB -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
     
-    <!-- 🔴 REDIS -->
+    <!-- REDIS -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-redis</artifactId>
     </dependency>
     
-    <!-- 🧩 JACKSON (USED BY API + REDIS SERIALIZATION) -->
+    <!--JACKSON (USED BY API + REDIS SERIALIZATION) -->
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
     </dependency>
     
-    <!-- 🧪 TESTING -->
+    <!-- TESTING -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -56,7 +56,7 @@
   <build>
     <plugins>
       
-      <!-- ✅ FORCE JAVA 17 (GOOD PRACTICE) -->
+      <!-- FORCE JAVA 17 (GOOD PRACTICE) -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -67,7 +67,7 @@
         </configuration>
       </plugin>
       
-      <!-- ✅ SPRING BOOT PLUGIN (VERSION INHERITED FROM PARENT) -->
+      <!-- SPRING BOOT PLUGIN (VERSION INHERITED FROM PARENT) -->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
