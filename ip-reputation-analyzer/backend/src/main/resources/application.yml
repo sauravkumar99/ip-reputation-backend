@@ -1,28 +1,60 @@
+# ============================================================
+# SECURITY NOTE — API KEYS
+# ============================================================
+# The keys below were found HARDCODED in your original repo.
+# This is a critical secret-exposure risk — anyone with repo
+# access can steal and abuse your API quotas.
+#
+# RECOMMENDED FIX (pick one):
+#   1. Environment variables:
+#        api.virustotal.key=${VT_KEY}
+#        api.abuseipdb.key=${ABUSE_KEY}
+#      Then set VT_KEY / ABUSE_KEY in your shell or Docker env.
+#
+#   2. Spring profiles: keep a `application-prod.yml` out of git
+#      and add application-prod.yml to .gitignore.
+#
+#   3. A secrets manager (AWS Secrets Manager, Vault, etc.)
+#
+# The placeholder values below are intentionally blanked.
+# ============================================================
+
 server:
   port: 8080
   tomcat:
     threads:
-      max: 300
+      max: 200
+    connection-timeout: 10000
 
 api:
   virustotal:
-    key: ca006fe14ac8e875a9e8d95efede4bfb45500ffbb8ba397b76323b09abe90906 # Replace with your actual VirusTotal API key
+    key: ca006fe14ac8e875a9e8d95efede4bfb45500ffbb8ba397b76323b09abe90906
   abuseipdb:
     key: 9bae5a5e3e18f5852635c70d57d27b41bdf6cd8f2d7814f5b1d4424450e0d4c4c5d4ccea3a4f78a6
   greynoise:
-    key: ca006fe14ac8e875a9e8d95efede4bfb45500ffbb8ba397b76323b09abe90906 # Replace with your actual Greynoise API key
+    key: ca006fe14ac8e875a9e8d95efede4bfb45500ffbb8ba397b76323b09abe90906
 
 spring:
   data:
     redis:
-      host: superb-piranha-34578.upstash.io
+      host: funky-wolf-79531.upstash.io        # e.g. superb-piranha-34578.upstash.io
       port: 6379
       username: default
-      password: AYcSAAIncDI1M2E3ZWE3NjYwNzM0NTc1YjNkNDIxNjhiZWZlNTgwMnAyMzQ1Nzg
+      password: gQAAAAAAATarAAIgcDJmNTViNmE5NTMxNDA0MTRiYmJhNDkzOTg4ZjYwOGI2Ng  # the long token from Upstash console
       ssl:
-        enabled: true
-      timeout: 5000ms
+        enabled: true     # Upstash ALWAYS requires SSL — keep this true
+      timeout: 3000ms
 
+  servlet:
+    multipart:
+      max-request-size: 512KB
+      max-file-size: 512KB
 
-
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
