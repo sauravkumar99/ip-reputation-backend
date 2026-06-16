@@ -11,52 +11,60 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import java.time.Duration;
+
 @Configuration
 public class RedisConfig {
-	
-	@Value("${spring.data.redis.host}")
-	private String host;
-	
-	@Value("${spring.data.redis.port}")
-	private int port;
-	
-	@Value("${spring.data.redis.username}")
-	private String username;
-	
-	@Value("${spring.data.redis.password}")
-	private String password;
-	
-	@Bean
-	public LettuceConnectionFactory redisConnectionFactory() {
-		
-		RedisStandaloneConfiguration config =
-				new RedisStandaloneConfiguration(host, port);
-		
-		config.setUsername(username);   // Upstash → "default"
-		config.setPassword(password);
-		
-		LettuceClientConfiguration clientConfig =
-				LettuceClientConfiguration.builder()
-						.useSsl()   // ✅ REQUIRED for Upstash
-						.build();
-		
-		return new LettuceConnectionFactory(config, clientConfig);
-	}
-	
-	// 🔥 IMPORTANT FIX: IPResult type
-	@Bean
-	public RedisTemplate<String, IPResult> redisTemplate() {
-		
-		RedisTemplate<String, IPResult> template = new RedisTemplate<>();
-		template.setConnectionFactory(redisConnectionFactory());
-		
-		template.setKeySerializer(new StringRedisSerializer());
-		template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-		
-		template.setHashKeySerializer(new StringRedisSerializer());
-		template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
-		
-		template.afterPropertiesSet();
-		return template;
-	}
+
+    @Value("${spring.data.redis.host}")
+    private String host;
+
+    @Value("${spring.data.redis.port}")
+    private int port;
+
+    @Value("${spring.data.redis.username:default}")
+    private String username;
+
+    @Value("${spring.data.redis.password}")
+    private String password;
+
+    @Value("${spring.data.redis.ssl.enabled:true}")
+    private boolean sslEnabled;
+
+    @Bean
+    public LettuceConnectionFactory redisConnectionFactory() {
+        // Step 1: Set host, port, credentials
+        RedisStandaloneConfiguration serverConfig = new RedisStandaloneConfiguration(host, port);
+        serverConfig.setUsername(username);
+        serverConfig.setPassword(password);
+
+        // Step 2: Build client config
+        // FIX: In Lettuce 6.x (Spring Boot 3.2), commandTimeout() must be called
+        // on the BASE builder BEFORE useSsl() — calling it after causes compile error.
+        LettuceClientConfiguration clientConfig;
+        if (sslEnabled) {
+            clientConfig = LettuceClientConfiguration.builder()
+                    .commandTimeout(Duration.ofSeconds(2))
+                    .useSsl()          // Upstash requires SSL
+                    .build();
+        } else {
+            clientConfig = LettuceClientConfiguration.builder()
+                    .commandTimeout(Duration.ofSeconds(2))
+                    .build();
+        }
+
+        return new LettuceConnectionFactory(serverConfig, clientConfig);
+    }
+
+    @Bean
+    public RedisTemplate<String, IPResult> redisTemplate() {
+        RedisTemplate<String, IPResult> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory());
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.afterPropertiesSet();
+        return template;
+    }
 }
